@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-up | Dreamy Delights</title>
+    <style>
+        /* General Styles */
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: #dc143c;
+            /* pink theme */
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        header nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header nav ul li {
+            display: inline-block;
+        }
+        
+        .home-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .home-btn-container {
+            margin-top: 10px;
+        }
+        
+        .home-btn-container a button {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            background-color: #ffc0cb;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+        
+        .home-btn-container a button:hover {
+            background-color: #ffb6c1;
+        }
+        
+        .review-page {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .review-page h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: #333;
+        }
+        
+        .review-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .review-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .review-box h2 {
+            margin-top: 0;
+        }
+        
+        .star-rating {
+            color: #ffc107;
+        }
+        /* Confetti */
+        
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff69b4;
+            border-radius: 50%;
+            animation: confetti-fall 3s infinite;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                top: 0;
+                transform: rotate(0deg);
+            }
+            100% {
+                top: 100%;
+                transform: rotate(360deg);
+            }
+        }
+        /* Thank you message */
+        
+        .thank-you-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .thank-you-message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .chocolates {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .chocolate {
+            width: 20px;
+            height: 20px;
+            background-color: #964B00;
+            border-radius: 50%;
+            margin: 0 5px;
+        }
+        /* Responsive Design */
+        
+        @media (max-width: 1024px) {
+            .review-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .review-container {
+                grid-template-columns: 1fr;
+            }
+            header nav ul li {
+                display: block;
+                margin-bottom: 10px;
+            }
+            .home-btn-container {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#" class="home-link">Reviews</a></li>
+            </ul>
+        </nav>
+
+        <div class="home-btn-container">
+            <a href="dashboard.html">
+                <button>🍕Dashboard</button>
+            </a>
+        </div>
+    </header>
+
+    <div class="review-page">
+        <h1>Customer Reviews</h1>
+        <div class="review-container">
+            <!-- Repeat these review-box divs as needed -->
+            <div class="review-box">
+                <h2>Review 1</h2>
+                <p>"A perfect 10. The crust is a masterpiece..." - Rohen</p>
+                <div class="star-rating">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+            </div>
+            <div class="review-box">
+                <h2>Review 2</h2>
+                <p>"The sauce is so bright and fresh..." - David</p>
+                <div class="star-rating">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            </div>
+            <div class="review-box">
+                <h2>Review 3</h2>
+                <p> "Great pizza, but I docked a star because the wait time was a little too long. Worth it, but plan accordingly." - James
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 4</h2>
+                <p>"The best New York style I've had outside of NYC. It had the perfect 'New York flop,' but still had a satisfying snap." - Karen
+
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 5</h2>
+                <p>"The cheese was fantastic, definitely fresh mozzarella. A little too much oregano in the sauce for my personal taste, but overall, highly recommended." - Mark
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 6</h2>
+                <p>"Excellent sourdough crust. They are trying too hard with the toppings, though—less is more on a canvas this good." - Sarah
+
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 7</h2>
+                <p>"It’s a solid, reliable, A-minus pizza. Never going to disappoint, but never going to blow your mind either." - Lisa
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 8</h2>
+                <p>"The sausage was spicy and flavorful. My only note is the very center of the pie was a bit too thin and sogged out quickly." - Tom
+
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 9</h2>
+                <p>"Loved the wood-fired char on the edges. The middle got a little cold fast, but that's what happens when you spend too long admiring it." - Jessica
+
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 10</h2>
+                <p>"Great value for the price. Not gourmet, but it's the best Friday night movie pizza in the neighborhood." - Chris
+
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 11</h2>
+                <p>"Fantastic use of ricotta cheese dollops. I wish the delivery driver hadn't tilted the box so all the ricotta slid to one side!" 5 stars!" - Amanda
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 12</h2>
+                <p> "Tried the white pie. It was rich and buttery. I’d order it again, but maybe only when I don't have to wear a white shirt."5 stars!" - Laura
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 13</h2>
+                <p> "The sweets are perfect for a quick dessert or snack. They're easy to eat on-the-go and are surprisingly filling! Highly recommend!" - Matthew
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 14</h2>
+                <p>"They clearly use a premade crust, but they dress it up well with excellent toppings. Middle of the road." - Sophia
+
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 15</h2>
+                <p> "The moment I took the first bite, I knew I was home. This is the ultimate comfort food, flawlessly executed." - Ava
+
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 16</h2>
+                <p>"This is pure, unadulterated perfection. The crust is like biting into a cloud—light, airy, and boasting a leopard-spot char that sings of a 900 ∘ F oven. 5 stars!" - Olivia
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 17</h2>
+                <p>"Pizza make great gifts! I've already ordered them for several friends and family members." - Mason
+
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <h2>Review 18</h2>
+                <p>"I ordered a customized Pizza for my birthday and it was stunning! The design was perfect." - Elijah
+
+                </p>
+                <div class="star-rating">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+            </div>
+            <!-- Add other reviews similarly -->
+        </div>
+    </div>
+
+    <div class="thank-you-container">
+        <p class="thank-you-message">Thank you for your feedback!</p>
+        <div class="chocolates">
+            <div class="chocolate"></div>
+            <div class="chocolate"></div>
+            <div class="chocolate"></div>
+        </div>
+    </div>
+
+    <div class="confetti-container">
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+    </div>
+
+    <script>
+        const confettiContainer = document.querySelector('.confetti-container');
+        for (let i = 0; i < 50; i++) {
+            const confettiPiece = document.createElement('div');
+            confettiPiece.classList.add('confetti');
+            confettiPiece.style.left = `${Math.random() * 100}%`;
+            confettiPiece.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+            confettiPiece.style.animationDelay = `${Math.random() * 3}s`;
+            confettiContainer.appendChild(confettiPiece);
+        }
+    </script>
+</body>
+
+</html>

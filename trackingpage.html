@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PizzaNova — Track Order</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <style>
+         :root {
+            --primary: #ff4c4c;
+            --secondary: #ffd166;
+            --success: #6ab547;
+            --dark: #1e1e1e;
+            --light: #ffffff;
+            --lightgray: #f5f5f5;
+            --gray: #ccc;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        
+        body {
+            background: var(--lightgray);
+            color: var(--dark);
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--primary);
+            color: var(--light);
+        }
+        
+        header .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        header nav button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background: var(--light);
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .tracking-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background: var(--light);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        
+        .order-info h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .order-info p {
+            margin-bottom: 6px;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0 10px;
+            padding: 20px 0;
+            border-top: 2px solid #eee;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .step {
+            text-align: center;
+            width: 25%;
+        }
+        
+        .circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ccc;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .done .circle {
+            background: var(--success);
+        }
+        
+        .active .circle {
+            background: var(--primary);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--gray);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .progress {
+            height: 100%;
+            background: var(--primary);
+            width: 50%;
+        }
+        
+        .map-container {
+            width: 100%;
+            height: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+        
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        
+        .timer {
+            font-weight: bold;
+            color: var(--dark);
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        
+        .driver-card,
+        .summary,
+        .support {
+            background: var(--lightgray);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .driver-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        
+        .driver-details {
+            display: flex;
+            align-items: center;
+        }
+        
+        .driver-info p {
+            margin: 3px 0;
+        }
+        
+        .summary ul {
+            list-style: none;
+        }
+        
+        .summary ul li {
+            padding: 6px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .btn.invoice {
+            background: var(--success);
+            color: #fff;
+        }
+        
+        .btn.support {
+            background: var(--secondary);
+            color: #000;
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">Pizza Delivery 🍕</div>
+        <nav>
+            <a href="inventorypage.html">
+                <button onclick="goHome()">👨‍💻Inventory</button>
+            </a>
+        </nav>
+    </header>
+
+    <div class="tracking-container">
+        <div class="grid">
+            <!-- LEFT SIDE -->
+            <div>
+                <div class="order-info">
+                    <h2>Tracking Order #PN12345</h2>
+                    <p><strong>Customer:</strong> John Doe</p>
+                    <p><strong>Address:</strong> 123 Main Street, New York</p>
+                    <p class="timer">ETA: <span id="countdown">30:00</span> mins</p>
+                    <p><strong>Delivery Notes:</strong> Leave at the front door.</p>
+                </div>
+
+                <div class="steps">
+                    <div class="step done">
+                        <div class="circle">✓</div>
+                        <p>Order Placed</p>
+                    </div>
+                    <div class="step active">
+                        <div class="circle">2</div>
+                        <p>Preparing</p>
+                    </div>
+                    <div class="step">
+                        <div class="circle">3</div>
+                        <p>On the Way</p>
+                    </div>
+                    <div class="step">
+                        <div class="circle">4</div>
+                        <p>Delivered</p>
+                    </div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.27991878826!2d-74.25987568759514!3d40.697670067621566!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQyJzAwLjAiTiA3NMKwMTUnMDAuMCJX!5e0!3m2!1sen!2sus!4v1633741641450!5m2!1sen!2sus"
+                        allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <div>
+                <div class="driver-card">
+                    <h3>🚴 Delivery Partner</h3>
+                    <div class="driver-details">
+                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Driver">
+                        <div class="driver-info">
+                            <p><strong>Alex Carter</strong></p>
+                            <p>⭐ 4.9 (230 rides)</p>
+                            <p>📞 +1 234 567 890</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary">
+                    <h3>🧾 Order Summary</h3>
+                    <ul id="order-items">
+                        <li>Pepperoni Pizza × 1 — $12.99</li>
+                        <li>Veggie Pasta × 2 — $19.00</li>
+                        <li>Chocolate Cake × 1 — $5.75</li>
+                    </ul>
+                    <p><strong>Total: $37.74</strong></p>
+                    <button class="btn invoice" onclick="downloadInvoice()">📥 Download Invoice</button>
+                </div>
+
+                <div class="support">
+                    <h3>💬 Support</h3>
+                    <p>Need help with your order?</p>
+                    <button class="btn support">Chat with Support</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goHome() {
+            window.location.href = "index.html";
+        }
+
+        // Countdown timer
+        let countdown = 30 * 60;
+        const timerEl = document.getElementById("countdown");
+
+        function updateTimer() {
+            let minutes = Math.floor(countdown / 60);
+            let seconds = countdown % 60;
+            timerEl.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+            if (countdown > 0) countdown--;
+        }
+        setInterval(updateTimer, 1000);
+
+        // Progress bar updater (simulate)
+        const progress = document.getElementById("progress");
+        let step = 50;
+        setInterval(() => {
+            if (step < 100) {
+                step += 1;
+                progress.style.width = step + "%";
+            }
+        }, 60000);
+
+        // Download Invoice as PDF
+        function downloadInvoice() {
+            const {
+                jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Set Title
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(18);
+            doc.text(" Pizza Delivery - Invoice", 60, 20);
+
+            // Customer Info (Bold)
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.text("Order ID: #PN12345", 20, 40);
+            doc.text("Customer: John Doe", 20, 50);
+            doc.text("Address: 123 Main Street, New York", 20, 60);
+            doc.text("Date: " + new Date().toLocaleDateString(), 20, 70);
+
+            // Table
+            doc.autoTable({
+                startY: 80,
+                head: [
+                    ['Item', 'Qty', 'Price ($)']
+                ],
+                headStyles: {
+                    fontStyle: 'bold',
+                    halign: 'center',
+                    fillColor: [255, 76, 76],
+                    textColor: 255
+                },
+                body: [
+                    ['Pepperoni Pizza', '1', '12.99'],
+                    ['Veggie Pasta', '2', '19.00'],
+                    ['Chocolate Cake', '1', '5.75'],
+                    ['TOTAL', '', '37.74']
+                ],
+                bodyStyles: {
+                    fontStyle: 'bold'
+                },
+                theme: 'grid',
+                styles: {
+                    font: 'helvetica'
+                }
+            });
+
+            doc.save("PizzaDelivery_Invoice.pdf");
+        }
+    </script>
+
+</body>
+
+</html>

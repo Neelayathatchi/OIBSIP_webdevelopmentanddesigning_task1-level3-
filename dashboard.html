@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>PizzaNova — Full Analytics Suite (Compact)</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+    <style>
+         :root {
+            --bg: #FAFAFA;
+            --card: #FFFFFF;
+            --muted: #EAEAEA;
+            --text: #333333;
+            --hint: #6B7280;
+            --tomato: #FF6B6B;
+            --cheese: #FFE066;
+            --mint: #8FD694;
+            --sky: #6BCBFF;
+            --lav: #C9B3FF;
+            --glass-shadow: 0 6px 18px rgba(20, 20, 20, 0.05);
+            --radius: 10px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+        }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+            overflow: auto;
+        }
+        
+        .sidebar {
+            width: 240px;
+            padding: 16px;
+            border-right: 1px solid var(--muted);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), #fff);
+            position: sticky;
+            top: 0;
+            height: 100vh
+        }
+        
+        .brand {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 8px
+        }
+        
+        .logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--tomato), #FF8A8A);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            box-shadow: var(--glass-shadow)
+        }
+        
+        .brand h1 {
+            font-size: 0.95rem;
+            margin: 0
+        }
+        
+        .sidebar .section-title {
+            font-size: 0.75rem;
+            color: var(--hint);
+            margin-top: 14px;
+            font-weight: 700;
+            text-transform: uppercase
+        }
+        
+        .filters {
+            background: var(--card);
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--muted);
+            box-shadow: var(--glass-shadow);
+            margin-top: 12px
+        }
+        
+        .filters label {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--hint);
+            margin-bottom: 5px;
+            font-weight: 700
+        }
+        
+        .filters select {
+            width: 100%;
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid var(--muted);
+            background: transparent;
+            outline: none
+        }
+        
+        .radio-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+            flex-wrap: wrap
+        }
+        
+        .radio-chip {
+            padding: 5px 8px;
+            border-radius: 999px;
+            border: 1px solid var(--muted);
+            background: transparent;
+            font-size: 0.82rem;
+            cursor: pointer
+        }
+        
+        .radio-chip.active {
+            background: var(--cheese);
+            border-color: rgba(0, 0, 0, 0.03)
+        }
+        
+        .main {
+            flex: 1;
+            padding: 16px
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px
+        }
+        
+        .title {
+            font-size: 1.25rem;
+            font-weight: 700
+        }
+        
+        .small {
+            color: var(--hint);
+            font-size: 0.85rem
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px
+        }
+        
+        .kpi {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 10px;
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--muted)
+        }
+        
+        .kpi .label {
+            font-size: 0.72rem;
+            color: var(--hint);
+            font-weight: 700;
+            text-transform: uppercase
+        }
+        
+        .kpi .value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+        
+        .kpi .meta {
+            color: var(--hint);
+            font-size: 0.82rem;
+            margin-top: 4px
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 10px;
+            margin-top: 14px
+        }
+        
+        .widget {
+            background: var(--card);
+            padding: 10px;
+            border-radius: var(--radius);
+            border: 1px solid var(--muted);
+            box-shadow: var(--glass-shadow);
+            min-height: 180px;
+            display: flex;
+            flex-direction: column
+        }
+        
+        .full {
+            grid-column: span 12
+        }
+        
+        .half {
+            grid-column: span 6
+        }
+        
+        .third {
+            grid-column: span 4
+        }
+        /* compact chart sizes */
+        
+        canvas {
+            height: 180px !important;
+        }
+        /* heatmap grid */
+        
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            padding: 4px
+        }
+        
+        .heat-cell {
+            height: 20px;
+            border-radius: 4px;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            color: var(--hint)
+        }
+        
+        .legend {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-top: 6px
+        }
+        
+        .legend .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px
+        }
+        /* responsive */
+        
+        @media(max-width:1000px) {
+            .sidebar {
+                display: none
+            }
+            .grid {
+                grid-template-columns: repeat(1, 1fr)
+            }
+            .half,
+            .third,
+            .full {
+                grid-column: span 1
+            }
+            body {
+                overflow: auto
+            }
+        }
+        
+        .quick-link {
+            cursor: pointer;
+            padding: 6px 0;
+            color: var(--hint);
+            transition: 0.2s;
+        }
+        
+        .quick-link:hover {
+            color: var(--tomato);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar" aria-label="Sidebar">
+        <div class="brand">
+            <div class="logo">PN</div>
+            <div>
+                <h1>Pizza Delivery🍕 HQ</h1>
+                <div style="font-size:0.78rem;color:var(--hint)">Light analytics · demo</div>
+            </div>
+        </div>
+
+        <div class="filters" aria-label="filters">
+            <label for="range">Date range</label>
+            <select id="range">
+            <option value="today">Today</option>
+            <option value="7d" selected>Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+            <option value="90d">Last 90 days</option>
+        </select>
+
+            <label style="margin-top:8px">Location</label>
+            <select id="location">
+            <option value="all" selected>All</option>
+            <option value="downtown">Downtown</option>
+            <option value="uptown">Uptown</option>
+            <option value="suburb">Suburb</option>
+        </select>
+
+            <label style="margin-top:8px">Order type</label>
+            <div class="radio-row" id="orderRow">
+                <div class="radio-chip active" data-val="all">All</div>
+                <div class="radio-chip" data-val="delivery">Delivery</div>
+                <div class="radio-chip" data-val="pickup">Pickup</div>
+            </div>
+
+            <div style="margin-top:10px;font-size:0.82rem;color:var(--hint)">Click filters to regenerate demo data</div>
+        </div>
+
+        <div style="margin-top:12px">
+            <div class="section-title">Quick links</div>
+            <ul style="list-style:none;padding:0;margin-top:8px">
+                <li class="quick-link" onclick="window.scrollTo({top:0,behavior:'smooth'})">Overview</li>
+                <li class="quick-link" onclick="window.scrollTo({top:0,behavior:'smooth'})">Orders</li>
+                <li class="quick-link" onclick="window.scrollTo({top:0,behavior:'smooth'})">Inventory</li>
+                <li class="quick-link" onclick="window.scrollTo({top:0,behavior:'smooth'})">Customers</li>
+            </ul>
+        </div>
+    </aside>
+
+    <main class="main" role="main">
+        <div class="header">
+            <div>
+                <div class="title">Pizza Delivery🍕 — Full Analytics Suite</div>
+                <div class="small">Multiple chart types · pastel light theme · simulated pizza data</div>
+            </div>
+            <div style="text-align:right">
+                <div style="font-weight:700">Last updated</div>
+                <div id="last" style="color:var(--hint)"></div>
+            </div>
+            <!-- Add this where you want the button -->
+            <div style="margin-top:20px">
+                <a href="profilepage.html">
+                    <button style="
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            background-color: #FFC0CB; /* Lite pink color */
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        ">⭐Profile</button>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- KPIs -->
+        <section class="kpi-grid" aria-label="KPIs">
+            <div class="kpi">
+                <div class="label">Total orders</div>
+                <div class="value">
+                    <div id="k-orders">0</div>
+                </div>
+                <div class="meta">vs last: <strong id="k-orders-m">—</strong></div>
+            </div>
+            <div class="kpi">
+                <div class="label">Revenue (₹)</div>
+                <div class="value">
+                    <div id="k-rev">₹0</div>
+                </div>
+                <div class="meta">Avg order value: <strong id="k-aov">—</strong></div>
+            </div>
+            <div class="kpi">
+                <div class="label">Avg delivery time</div>
+                <div class="value">
+                    <div id="k-delivery">0</div>
+                </div>
+                <div class="meta">On-time rate: <strong id="k-ontime">—</strong></div>
+            </div>
+            <div class="kpi">
+                <div class="label">Top pizza</div>
+                <div class="value">
+                    <div id="k-top">—</div>
+                </div>
+                <div class="meta">Top category: <strong id="k-topcat">—</strong></div>
+            </div>
+        </section>
+
+        <!-- charts grid -->
+        <section class="grid" aria-label="charts">
+            <div class="widget full">
+                <h3>Orders & Revenue Trend</h3>
+                <canvas id="chartTrend"></canvas>
+            </div>
+
+            <div class="widget half">
+                <h3>Category Breakdown (Pie)</h3>
+                <canvas id="chartCat"></canvas>
+            </div>
+
+            <div class="widget half">
+                <h3>Top Pizzas (Bar)</h3>
+                <canvas id="chartTop"></canvas>
+            </div>
+
+            <div class="widget third">
+                <h3>Delivery Time Distribution</h3>
+                <canvas id="chartDelivery"></canvas>
+            </div>
+
+            <div class="widget third">
+                <h3>Offers vs Regular (Stacked)</h3>
+                <canvas id="chartOffers"></canvas>
+            </div>
+
+            <div class="widget third">
+                <h3>Customer Ratings (Donut)</h3>
+                <canvas id="chartRatings"></canvas>
+            </div>
+
+            <div class="widget third">
+                <h3>Orders by Location (Polar)</h3>
+                <canvas id="chartPolar"></canvas>
+            </div>
+
+            <div class="widget third">
+                <h3>New vs Repeat Customers</h3>
+                <canvas id="chartRepeat"></canvas>
+            </div>
+
+            <div class="widget third">
+                <h3>Churn vs Retention (Radar)</h3>
+                <canvas id="chartRadar"></canvas>
+            </div>
+
+            <div class="widget half">
+                <h3>Delivery Perf: distance vs time (Scatter)</h3>
+                <canvas id="chartScatter"></canvas>
+            </div>
+
+            <div class="widget half">
+                <h3>Orders Heatmap (Week view)</h3>
+                <div id="heat" class="heatmap" aria-hidden="false"></div>
+            </div>
+        </section>
+
+        <div style="margin-top:14px;color:var(--hint);font-size:0.85rem" id="footnote">Simulated demo data — filters regenerate values</div>
+
+    </main>
+
+    <script>
+        const PINK = '#FFB6C1'; // lite pink color
+
+        function rand(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function updateKPIs() {
+            const orders = rand(500, 1500);
+            const rev = orders * rand(200, 450);
+            const delivery = rand(20, 50);
+            const topPizzas = ['Margherita', 'Pepperoni', 'Veggie', 'BBQ Chicken'];
+            const topPizza = topPizzas[rand(0, topPizzas.length - 1)];
+
+            document.getElementById('k-orders').innerText = orders;
+            document.getElementById('k-orders-m').innerText = `${rand(-5,15)}%`;
+            document.getElementById('k-rev').innerText = `₹${rev}`;
+            document.getElementById('k-aov').innerText = `₹${Math.round(rev/orders)}`;
+            document.getElementById('k-delivery').innerText = `${delivery} min`;
+            document.getElementById('k-ontime').innerText = `${rand(80,99)}%`;
+            document.getElementById('k-top').innerText = topPizza;
+            document.getElementById('k-topcat').innerText = ['Veg', 'Non-Veg'][rand(0, 1)];
+            document.getElementById('last').innerText = new Date().toLocaleTimeString();
+        }
+
+        // Orders & Revenue Trend
+        const chartTrend = new Chart(document.getElementById('chartTrend'), {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Orders',
+                    data: Array.from({
+                        length: 7
+                    }, () => rand(80, 150)),
+                    borderColor: PINK,
+                    backgroundColor: 'rgba(255,182,193,0.2)',
+                    fill: true,
+                    tension: 0.3
+                }, {
+                    label: 'Revenue',
+                    data: Array.from({
+                        length: 7
+                    }, () => rand(20000, 45000)),
+                    borderColor: PINK,
+                    backgroundColor: 'rgba(255,182,193,0.2)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            }
+        });
+
+        // Pie, Bar, Donut, Polar, Radar, Scatter all use PINK
+        const chartCat = new Chart(document.getElementById('chartCat'), {
+            type: 'pie',
+            data: {
+                labels: ['Veg', 'Non-Veg', 'Beverages', 'Desserts'],
+                datasets: [{
+                    data: Array.from({
+                        length: 4
+                    }, () => rand(20, 100)),
+                    backgroundColor: [PINK, PINK, PINK, PINK]
+                }]
+            }
+        });
+
+        const chartTop = new Chart(document.getElementById('chartTop'), {
+            type: 'bar',
+            data: {
+                labels: ['Margherita', 'Pepperoni', 'BBQ Chicken', 'Veggie', 'Hawaiian'],
+                datasets: [{
+                    label: 'Orders',
+                    data: Array.from({
+                        length: 5
+                    }, () => rand(50, 200)),
+                    backgroundColor: PINK
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        const chartDel = new Chart(document.getElementById('chartDelivery'), {
+            type: 'bar',
+            data: {
+                labels: ['10-20', '21-30', '31-40', '41-50', '51-60'],
+                datasets: [{
+                    label: 'Deliveries',
+                    data: Array.from({
+                        length: 5
+                    }, () => rand(50, 150)),
+                    backgroundColor: PINK
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        const chartOffers = new Chart(document.getElementById('chartOffers'), {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Regular',
+                    data: Array.from({
+                        length: 7
+                    }, () => rand(50, 100)),
+                    backgroundColor: PINK
+                }, {
+                    label: 'Offers',
+                    data: Array.from({
+                        length: 7
+                    }, () => rand(20, 60)),
+                    backgroundColor: PINK
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        stacked: true
+                    }
+                }
+            }
+        });
+
+        const chartRatings = new Chart(document.getElementById('chartRatings'), {
+            type: 'doughnut',
+            data: {
+                labels: ['★5', '★4', '★3', '★2', '★1'],
+                datasets: [{
+                    data: Array.from({
+                        length: 5
+                    }, () => rand(10, 100)),
+                    backgroundColor: [PINK, PINK, PINK, PINK, PINK]
+                }]
+            }
+        });
+
+        const chartPolar = new Chart(document.getElementById('chartPolar'), {
+            type: 'polarArea',
+            data: {
+                labels: ['Downtown', 'Uptown', 'Suburb', 'Riverside', 'Airport'],
+                datasets: [{
+                    data: Array.from({
+                        length: 5
+                    }, () => rand(50, 150)),
+                    backgroundColor: [PINK, PINK, PINK, PINK, PINK]
+                }]
+            }
+        });
+
+        const chartRepeat = new Chart(document.getElementById('chartRepeat'), {
+            type: 'doughnut',
+            data: {
+                labels: ['New', 'Repeat'],
+                datasets: [{
+                    data: [rand(80, 150), rand(50, 120)],
+                    backgroundColor: [PINK, PINK]
+                }]
+            }
+        });
+
+        const chartRadar = new Chart(document.getElementById('chartRadar'), {
+            type: 'radar',
+            data: {
+                labels: ['Churn', 'Retention', 'Engagement', 'Satisfaction', 'Referral'],
+                datasets: [{
+                    label: 'Score',
+                    data: Array.from({
+                        length: 5
+                    }, () => rand(40, 100)),
+                    backgroundColor: 'rgba(255,182,193,0.2)',
+                    borderColor: PINK
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const chartScatter = new Chart(document.getElementById('chartScatter'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Delivery distance vs time',
+                    data: Array.from({
+                        length: 30
+                    }, () => ({
+                        x: rand(1, 10),
+                        y: rand(15, 60)
+                    })),
+                    backgroundColor: PINK
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Distance (km)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Time (min)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Heatmap
+        const heat = document.getElementById('heat');
+
+        function updateHeat() {
+            heat.innerHTML = '';
+            for (let i = 0; i < 7; i++) {
+                for (let j = 0; j < 4; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'heat-cell';
+                    const val = rand(5, 50);
+                    cell.style.backgroundColor = `rgba(255,182,193,${val/50})`;
+                    cell.innerText = val;
+                    heat.appendChild(cell);
+                }
+            }
+        }
+
+        // Filters
+        document.getElementById('range').addEventListener('change', () => updateCharts());
+        document.getElementById('location').addEventListener('change', () => updateCharts());
+        document.querySelectorAll('#orderRow .radio-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('#orderRow .radio-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                updateCharts();
+            });
+        });
+
+        function updateCharts() {
+            updateKPIs();
+
+            chartTrend.data.datasets[0].data = Array.from({
+                length: 7
+            }, () => rand(80, 150));
+            chartTrend.data.datasets[1].data = Array.from({
+                length: 7
+            }, () => rand(20000, 45000));
+            chartTrend.update();
+
+            chartCat.data.datasets[0].data = Array.from({
+                length: 4
+            }, () => rand(20, 100));
+            chartCat.update();
+
+            chartTop.data.datasets[0].data = Array.from({
+                length: 5
+            }, () => rand(50, 200));
+            chartTop.update();
+
+            chartDel.data.datasets[0].data = Array.from({
+                length: 5
+            }, () => rand(50, 150));
+            chartDel.update();
+
+            chartOffers.data.datasets[0].data = Array.from({
+                length: 7
+            }, () => rand(50, 100));
+            chartOffers.data.datasets[1].data = Array.from({
+                length: 7
+            }, () => rand(20, 60));
+            chartOffers.update();
+
+            chartRatings.data.datasets[0].data = Array.from({
+                length: 5
+            }, () => rand(10, 100));
+            chartRatings.update();
+
+            chartPolar.data.datasets[0].data = Array.from({
+                length: 5
+            }, () => rand(50, 150));
+            chartPolar.update();
+
+            chartRepeat.data.datasets[0].data = [rand(80, 150), rand(50, 120)];
+            chartRepeat.update();
+
+            chartRadar.data.datasets[0].data = Array.from({
+                length: 5
+            }, () => rand(40, 100));
+            chartRadar.update();
+
+            chartScatter.data.datasets[0].data = Array.from({
+                length: 30
+            }, () => ({
+                x: rand(1, 10),
+                y: rand(15, 60)
+            }));
+            chartScatter.update();
+
+            updateHeat();
+        }
+
+        updateCharts();
+    </script>
+
+
+
+</body>
+
+</html>

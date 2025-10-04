@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PizzaNova — Cart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --primary: #FF4C4C;
+            --secondary: #FFD166;
+            --success: #6AB547;
+            --dark: #1E1E1E;
+            --light: #FFFFFF;
+            --lightgray: #F9F9F9;
+            --orange: #FF7F00;
+            --transition: 0.3s;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: var(--lightgray);
+            color: var(--dark);
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--dark);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        header nav button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            background: var(--primary);
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-left: 10px;
+        }
+        
+        header nav button:hover {
+            background: var(--orange);
+        }
+        
+        .cart-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .cart-header h2 {
+            color: var(--primary);
+        }
+        
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: var(--lightgray);
+            border-radius: 8px;
+        }
+        
+        .cart-header button {
+            background: #FF4C4C;
+            /* Red background */
+            color: #fff;
+            /* White text */
+            padding: 8px 15px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .cart-item .info {
+            flex: 1;
+            margin-left: 15px;
+        }
+        
+        .cart-item .info h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item .info p {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .qty-controls button {
+            background: var(--secondary);
+            border: none;
+            border-radius: 4px;
+            padding: 3px 7px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        
+        .cart-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-footer h3 {
+            font-size: 1.2rem;
+        }
+        
+        .checkout-btn {
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .checkout-btn:hover {
+            background: var(--orange);
+        }
+        /* Full Menu Section */
+        
+        .menu-container {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        
+        .menu-card {
+            background: var(--light);
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            padding: 10px;
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .menu-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .menu-card h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .menu-card p {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .menu-card button {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            padding: 8px 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .menu-card button:hover {
+            background: var(--orange);
+        }
+        
+        @media(max-width:768px) {
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .cart-item .info {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+            .cart-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">Pizza Delivery 🍕</div>
+        <nav>
+            <a href="trackingpage.html">
+                <button onclick="goHome()">🚜Tracking</button>
+            </a>
+        </nav>
+    </header>
+
+    <div class="cart-container">
+        <div class="cart-header">
+            <h2>🛒 Your Cart</h2>
+            <button onclick="clearCart()">Clear All</button>
+        </div>
+
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items dynamically rendered here -->
+        </div>
+
+        <div class="cart-footer">
+            <h3>Total: $<span id="cartTotal">0.00</span></h3>
+            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <div class="menu-container">
+        <h2>🍕 Choose Your Items</h2>
+        <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+    <script>
+        const MENU = [{
+            id: 'item1',
+            name: 'Pepperoni Pizza',
+            price: 12.99,
+            img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQM139w1VU2mxRDne48cK0otWvdKTgEVjVtoSjfKQnbZ9ncSzI3ecjcMWYkQkmqUM3CWvE&usqp=CAU'
+        }, {
+            id: 'item2',
+            name: 'Veggie Pasta',
+            price: 9.50,
+            img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbH1aVDF1YPug_u2bebUQMYdsj1uFtAQViAQ&s'
+        }, {
+            id: 'item3',
+            name: 'Chocolate Cake',
+            price: 5.75,
+            img: 'https://st.depositphotos.com/1137361/1317/v/950/depositphotos_13176100-stock-illustration-cartoon-cake.jpg'
+        }, {
+            id: 'item4',
+            name: 'Margherita Pizza',
+            price: 11.25,
+            img: 'https://www.shutterstock.com/image-vector/pizzaflat-coloring-styleillustration-children-260nw-761800429.jpg'
+        }, {
+            id: 'item5',
+            name: 'Coke',
+            price: 2.50,
+            img: 'https://static.vecteezy.com/system/resources/previews/012/507/429/non_2x/soft-drink-illustration-cartoon-food-and-drink-logo-cold-cola-drinks-icon-symbol-free-vector.jpg'
+        }, {
+            id: 'item6',
+            name: 'Ice Cream',
+            price: 3.75,
+            img: 'https://c8.alamy.com/comp/2RJ3BM3/ice-cream-cartoon-colored-clipart-illustration-2RJ3BM3.jpg'
+        }, {
+            id: 'item1',
+            name: 'Pepperoni Pizza',
+            price: 12.99,
+            img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQM139w1VU2mxRDne48cK0otWvdKTgEVjVtoSjfKQnbZ9ncSzI3ecjcMWYkQkmqUM3CWvE&usqp=CAU'
+        }, {
+            id: 'item2',
+            name: 'Veggie Pasta',
+            price: 9.50,
+            img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNm7awYymQPSz3lmhNrvGptpoJ4n1ubQbXWQ&s'
+        }, {
+            id: 'item3',
+            name: 'Chocolate Cake',
+            price: 5.75,
+            img: 'https://st.depositphotos.com/1137361/1317/v/950/depositphotos_13176100-stock-illustration-cartoon-cake.jpg'
+        }, {
+            id: 'item4',
+            name: 'Margherita Pizza',
+            price: 11.25,
+            img: 'https://www.shutterstock.com/image-vector/pizzaflat-coloring-styleillustration-children-260nw-761800429.jpg'
+        }, {
+            id: 'item5',
+            name: 'Coke',
+            price: 2.50,
+            img: 'https://static.vecteezy.com/system/resources/previews/012/507/429/non_2x/soft-drink-illustration-cartoon-food-and-drink-logo-cold-cola-drinks-icon-symbol-free-vector.jpg'
+        }, {
+            id: 'item6',
+            name: 'Ice Cream',
+            price: 3.75,
+            img: 'https://c8.alamy.com/comp/2RJ3BM3/ice-cream-cartoon-colored-clipart-illustration-2RJ3BM3.jpg'
+        }, {
+            id: 'item1',
+            name: 'Pepperoni Pizza',
+            price: 12.99,
+            img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQM139w1VU2mxRDne48cK0otWvdKTgEVjVtoSjfKQnbZ9ncSzI3ecjcMWYkQkmqUM3CWvE&usqp=CAU'
+        }, {
+            id: 'item2',
+            name: 'Veggie Pasta',
+            price: 9.50,
+            img: 'https://png.pngtree.com/png-vector/20231001/ourmid/pngtree-illustration-cartoon-spaghetti-bolognese-delicious-food-dining-decoration-pattern-cutout-png-image_10141554.png'
+        }, {
+            id: 'item3',
+            name: 'Chocolate Cake',
+            price: 5.75,
+            img: 'https://st.depositphotos.com/1137361/1317/v/950/depositphotos_13176100-stock-illustration-cartoon-cake.jpg'
+        }, {
+            id: 'item4',
+            name: 'Margherita Pizza',
+            price: 11.25,
+            img: 'https://www.shutterstock.com/image-vector/pizzaflat-coloring-styleillustration-children-260nw-761800429.jpg'
+        }, {
+            id: 'item5',
+            name: 'Coke',
+            price: 2.50,
+            img: 'https://static.vecteezy.com/system/resources/previews/012/507/429/non_2x/soft-drink-illustration-cartoon-food-and-drink-logo-cold-cola-drinks-icon-symbol-free-vector.jpg'
+        }, {
+            id: 'item6',
+            name: 'Ice Cream',
+            price: 3.75,
+            img: 'https://cdn.vectorstock.com/i/1000v/91/75/ice-cream-cartoon-colored-clipart-vector-48279175.jpg'
+        }, {
+            id: 'item1',
+            name: 'Pepperoni Pizza',
+            price: 12.99,
+            img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQM139w1VU2mxRDne48cK0otWvdKTgEVjVtoSjfKQnbZ9ncSzI3ecjcMWYkQkmqUM3CWvE&usqp=CAU'
+        }, {
+            id: 'item2',
+            name: 'Veggie Pasta',
+            price: 9.50,
+            img: 'https://static.vecteezy.com/system/resources/previews/016/765/983/non_2x/pasta-fast-food-cartoon-png.png'
+        }, {
+            id: 'item3',
+            name: 'Chocolate Cake',
+            price: 5.75,
+            img: 'https://st.depositphotos.com/1137361/1317/v/950/depositphotos_13176100-stock-illustration-cartoon-cake.jpg'
+        }, {
+            id: 'item4',
+            name: 'Margherita Pizza',
+            price: 11.25,
+            img: 'https://www.shutterstock.com/image-vector/pizzaflat-coloring-styleillustration-children-260nw-761800429.jpg'
+        }, {
+            id: 'item5',
+            name: 'Coke',
+            price: 2.50,
+            img: 'https://static.vecteezy.com/system/resources/previews/012/507/429/non_2x/soft-drink-illustration-cartoon-food-and-drink-logo-cold-cola-drinks-icon-symbol-free-vector.jpg'
+        }, {
+            id: 'item6',
+            name: 'Ice Cream',
+            price: 3.75,
+            img: 'https://img.lovepik.com/free-png/20210926/lovepik-summer-cartoon-ice-cream-png-image_401421892_wh1200.png'
+        }];
+
+        let cart = [];
+
+        function addToCart(id) {
+            const item = MENU.find(m => m.id === id);
+            const cartItem = cart.find(c => c.id === id);
+            if (cartItem) cartItem.qty += 1;
+            else cart.push({...item,
+                qty: 1
+            });
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            container.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price * item.qty;
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <img src="${item.img}" alt="${item.name}">
+                    <div class="info">
+                        <h4>${item.name}</h4>
+                        <p>$${item.price.toFixed(2)}</p>
+                        <div class="qty-controls">
+                            <button onclick="changeQty('${item.id}', -1)">-</button>
+                            <span>${item.qty}</span>
+                            <button onclick="changeQty('${item.id}', 1)">+</button>
+                        </div>
+                    </div>
+                    <span>$${(item.price * item.qty).toFixed(2)}</span>
+                `;
+                container.appendChild(div);
+            });
+            document.getElementById('cartTotal').innerText = total.toFixed(2);
+        }
+
+        function renderMenu() {
+            const container = document.getElementById('menuGrid');
+            container.innerHTML = '';
+            MENU.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'menu-card';
+                div.innerHTML = `
+                    <img src="${item.img}" alt="${item.name}">
+                    <h4>${item.name}</h4>
+                    <p>$${item.price.toFixed(2)}</p>
+                    <button onclick="addToCart('${item.id}')">Add to Cart</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(c => c.id === id);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) cart = cart.filter(c => c.id !== id);
+            renderCart();
+        }
+
+        function clearCart() {
+            cart = [];
+            renderCart();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            let summary = 'Order Summary:\n';
+            cart.forEach(item => {
+                summary += `${item.name} x${item.qty} = $${(item.price * item.qty).toFixed(2)}\n`;
+            });
+            summary += `Total: $${cart.reduce((a, c) => a + c.price * c.qty, 0).toFixed(2)}`;
+            alert(summary + '\n\nCheckout successful! 🎉');
+            clearCart();
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        renderMenu();
+        renderCart();
+    </script>
+    <!-- Add this at the end of your <body> before </body> -->
+
+    <!-- Delivery Bike Animation -->
+    <div class="delivery-bike">
+        <img src="https://goldcoastmotorcyclerental.au/wp-content/uploads/2024/04/Food-delivery-animation.gif" alt="Delivery Bike">
+    </div>
+
+    <style>
+        /* Delivery Bike Styles */
+        
+        .delivery-bike {
+            position: fixed;
+            bottom: 10px;
+            left: -400px;
+            /* Start far off-screen */
+            width: 400px;
+            /* Much larger size */
+            height: auto;
+            z-index: 1000;
+            animation: moveBike 10s linear infinite;
+            /* Slower for smooth movement */
+        }
+        
+        .delivery-bike img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        @keyframes moveBike {
+            0% {
+                left: -500px;
+            }
+            50% {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            100% {
+                left: 100%;
+            }
+        }
+    </style>
+
+</body>
+
+</html>
